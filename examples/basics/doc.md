@@ -41,7 +41,7 @@ author: frozenbonito
 
 ## リンク
 
-[Eivogel template](https://github.com/Wandmalfarbe/pandoc-latex-template) を使っています。
+[Eisvogel template](https://github.com/Wandmalfarbe/pandoc-latex-template) を使っています。
 
 ## テーブル
 
