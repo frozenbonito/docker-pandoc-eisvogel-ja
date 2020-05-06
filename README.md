@@ -1,5 +1,7 @@
 # docker-pandoc-eisvogel-ja
 
+![Build](https://github.com/frozenbonito/docker-pandoc-eisvogel-ja/workflows/Build/badge.svg?event=release)
+
 Pandoc docker image with [eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) template for Japanese.
 
 ## Usage
