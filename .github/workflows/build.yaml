@@ -55,7 +55,7 @@ jobs:
         if: github.event_name == 'release' && github.event.action == 'published'
         env:
           DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-        run: echo "${DOCKER_HUB_TOKEN} | docker login -u frozenbonito --password-stdin
+        run: echo "${DOCKER_HUB_TOKEN}" | docker login -u frozenbonito --password-stdin
 
       - name: Get release version
         if: github.event_name == 'release' && github.event.action == 'published'
