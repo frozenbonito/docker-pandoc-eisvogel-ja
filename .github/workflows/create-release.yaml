@@ -25,9 +25,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this release
-            - Update [pandoc/latex](https://hub.docker.com/r/pandoc/latex) (base image) to ${VERSION}
+            - Update [pandoc/latex](https://hub.docker.com/r/pandoc/latex) (base image) to ${{ env.VERSION }}
 
             Images:
-            - `frozenbonito/pandoc-eisvogel-ja:${VERSION}`
-            - `frozenbonito/pandoc-eisvogel-ja:${VERSION}-plantuml`
+            - `frozenbonito/pandoc-eisvogel-ja:${{ env.VERSION }}`
+            - `frozenbonito/pandoc-eisvogel-ja:${{ env.VERSION }}-plantuml`
           draft: true
