@@ -1,0 +1,82 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**.md"
+      - "examples/**"
+  release:
+    types:
+      - published
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - "examples/**"
+
+env:
+  IMAGE_BASE_NAME: frozenbonito/pandoc-eisvogel-ja
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Define environment variables
+        env:
+          LATEST_TAG: "${{ env.IMAGE_BASE_NAME }}:latest"
+          PLANTUML_TAG: "${{ env.IMAGE_BASE_NAME }}:plantuml"
+        run: |
+          echo "::set-env name=LATEST_TAG::${LATEST_TAG}"
+          echo "::set-env name=PLANTUML_TAG::${PLANTUML_TAG}"
+
+      - name: Build base image
+        run: docker build -t "${LATEST_TAG}" .
+
+      - name: Run base image
+        run: |
+          cd examples/basics
+          docker run --rm -v $(pwd):/data "${LATEST_TAG}" -d config.yaml -o doc.pdf doc.md
+
+      - name: Build plantuml image
+        run: |
+          cd plantuml
+          docker build -t "${PLANTUML_TAG}" .
+
+      - name: Run plantuml image
+        run: |
+          cd examples/plantuml
+          docker run --rm -v $(pwd):/data "${PLANTUML_TAG}" -o doc.pdf doc.md
+
+      - name: Login Docker Hub
+        if: github.event_name == 'release' && github.event.action == 'published'
+        env:
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: echo "${DOCKER_HUB_TOKEN} | docker login -u frozenbonito --password-stdin
+
+      - name: Get release version
+        if: github.event_name == 'release' && github.event.action == 'published'
+        env:
+          RELEASE_TAG: ${{ github.ref }}
+        run: echo "::set-env name=RELEASE_VERSION::${RELEASE_TAG#v}"
+
+      - name: Push base image
+        if: github.event_name == 'release' && github.event.action == 'published'
+        env:
+          VERSION_TAG: "${{ env.IMAGE_BASE_NAME }}:${{ env.RELEASE_VERSION }}"
+        run: |
+          docker tag "${LATEST_TAG}" "${VERSION_TAG}"
+          docker push "${VERSION_TAG}"
+          docker push "${LATEST_TAG}"
+
+      - name: Push plantuml image
+        if: github.event_name == 'release' && github.event.action == 'published'
+        env:
+          VERSION_TAG: "${{ env.IMAGE_BASE_NAME }}:${{ env.RELEASE_VERSION }}-plantuml"
+        run: |
+          docker tag "${PLANTUML_TAG}" "${VERSION_TAG}"
+          docker push "${VERSION_TAG}"
+          docker push "${PLANTUML_TAG}"
