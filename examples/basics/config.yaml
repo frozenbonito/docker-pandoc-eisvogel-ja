@@ -1,0 +1,9 @@
+listings: true
+number-sections: true
+table-of-contents: true
+variables:
+  linkcolor: blue
+  table-use-row-colors: true
+  titlepage: true
+  toc-own-page: true
+  toc-title: 目次
