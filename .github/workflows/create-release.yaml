@@ -9,6 +9,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Get version
+        env:
+          TAG_REF: ${{ github.ref }}
+        run: |
+          TAG_NAME=$(echo "${TAG_REF#refs/tags/}")
+          echo "::set-env name=VERSION::${TAG_NAME#v}"
+
       - name: Create release
         uses: actions/create-release@v1
         env:
@@ -18,9 +25,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this release
-            - Update [pandoc/latex](https://hub.docker.com/r/pandoc/latex) (base image) to ${{ github.ref }}
+            - Update [pandoc/latex](https://hub.docker.com/r/pandoc/latex) (base image) to ${VERSION}
 
             Images:
-            - `frozenbonito/pandoc-eisvogel-ja:${{ github.ref }}`
-            - `frozenbonito/pandoc-eisvogel-ja:${{ github.ref }}-plantuml`
+            - `frozenbonito/pandoc-eisvogel-ja:${VERSION}`
+            - `frozenbonito/pandoc-eisvogel-ja:${VERSION}-plantuml`
           draft: true
