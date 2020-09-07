@@ -1,8 +1,14 @@
 FROM frozenbonito/pandoc-eisvogel-ja
 
-RUN apk add --no-cache openjdk11 graphviz ttf-droid ttf-droid-nonlatin python3
+RUN apk add --no-cache \
+    graphviz \
+    openjdk11 \
+    python3 \
+    py3-pip \
+    ttf-droid \
+    ttf-droid-nonlatin
 
-ARG plantuml_version="1.2020.8"
+ARG plantuml_version="1.2020.16"
 RUN wget https://sourceforge.net/projects/plantuml/files/plantuml.${plantuml_version}.jar/download -O /root/plantuml.jar
 
 RUN pip3 install --upgrade pip
@@ -12,4 +18,4 @@ ENV PLANTUML_BIN="java -jar /root/plantuml.jar"
 
 COPY plantuml.yaml /root/.pandoc/defaults/plantuml.yaml
 
-ENTRYPOINT [ "docker-entrypoint.sh", "-d", "default", "-d", "plantuml" ]
+ENTRYPOINT [ "/usr/local/bin/pandoc", "-d", "default", "-d", "plantuml" ]
