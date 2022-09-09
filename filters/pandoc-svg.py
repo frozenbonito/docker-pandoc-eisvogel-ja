@@ -19,16 +19,18 @@ template = Template('''
             function init() {
                 const element = document.getElementById('targetsvg');
                 const positionInfo = element.getBoundingClientRect();
-                const height = positionInfo.height + 1;
-                const width = positionInfo.width + 1;
+                const left = Math.ceil(positionInfo.width * 0.003);
+                const top = Math.ceil(positionInfo.height * 0.003);
+                const width = positionInfo.width + left * 2;
+                const height = positionInfo.height + top * 2;
                 const style = document.createElement('style');
-                style.innerHTML = `html{margin: 0; padding: 0;} body{margin: 0; padding: 0;} img{margin: 0; padding: 0;} @page {margin: 0; padding: 0; size: ${width}px ${height}px}`;
+                style.innerHTML = `#targetsvg{margin-left: ${left}; margin-top: ${top}; padding: 0;} @page{margin: 0; size: ${width}px ${height}px}`;
                 document.head.appendChild(style);
             }
             window.onload = init;
         </script>
     </head>
-    <body>
+    <body style="margin: 0; padding: 0;">
         <img id="targetsvg" src="{{ svgpath }}">
     </body>
 </html>
