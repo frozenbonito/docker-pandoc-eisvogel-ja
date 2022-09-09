@@ -1,4 +1,4 @@
-ARG pandoc_version="2.10"
+ARG pandoc_version="2.19.2.0-alpine"
 FROM pandoc/latex:${pandoc_version}
 
 ARG pandoc_version
@@ -23,14 +23,28 @@ RUN tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet \
     titling \
     zref \
     haranoaji \
-    ipaex
+    ipaex \
+    koma-script
 
-ARG eisvogel_version="1.5.0"
-RUN mkdir -p /root/.pandoc/templates \
+RUN apk add --no-cache font-ipaex python3 py3-pip chromium
+RUN pip3 install --no-cache-dir pandocfilters jinja2
+RUN ln -sf python3 /usr/bin/python
+
+RUN adduser -h /home/pandocuser -D pandocuser
+
+RUN mkdir -p /home/pandocuser/.pandoc/templates
+RUN mkdir -p /home/pandocuser/.pandoc/defaults
+RUN mkdir -p /home/pandocuser/.pandoc/filters
+RUN mkdir /temp && chown pandocuser /temp
+
+ARG eisvogel_version="2.0.0"
+RUN mkdir -p /home/pandocuser/.pandoc/templates \
     && wget https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/v${eisvogel_version}/eisvogel.tex \
-    -O /root/.pandoc/templates/eisvogel.latex
+    -O /home/pandocuser/.pandoc/templates/eisvogel.latex
 
-RUN mkdir -p /root/.pandoc/defaults
-COPY default.yaml /root/.pandoc/defaults/default.yaml
+COPY filters/pandoc-svg.py /home/pandocuser/.pandoc/filters/pandoc-svg.py
+COPY default.yaml /home/pandocuser/.pandoc/defaults/default.yaml
+
+USER pandocuser
 
 ENTRYPOINT [ "/usr/local/bin/pandoc", "-d", "default" ]
