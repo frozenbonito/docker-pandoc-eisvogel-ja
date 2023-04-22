@@ -3,7 +3,7 @@ FROM pandoc/latex:${pandoc_version}
 
 ARG pandoc_version
 
-RUN tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet \
+RUN tlmgr option repository ftp://tug.org/historic/systems/texlive/2022/tlnet-final \
     && tlmgr install adjustbox \
     babel-japanese \
     background \
@@ -24,7 +24,10 @@ RUN tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet \
     zref \
     haranoaji \
     ipaex \
-    koma-script
+    koma-script \
+    environ \
+    tcolorbox \
+    tikzfill
 
 RUN apk add --no-cache font-ipaex python3 py3-pip chromium
 RUN pip3 install --no-cache-dir pandocfilters jinja2
