@@ -1,9 +1,9 @@
-ARG pandoc_version="2.10"
+ARG pandoc_version="3.1.1"
 FROM pandoc/latex:${pandoc_version}
 
 ARG pandoc_version
 
-RUN tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet \
+RUN tlmgr option repository ftp://tug.org/historic/systems/texlive/2022/tlnet-final \
     && tlmgr install adjustbox \
     babel-japanese \
     background \
@@ -23,9 +23,11 @@ RUN tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet \
     titling \
     zref \
     haranoaji \
-    ipaex
+    ipaex \
+    koma-script \
+    lineno
 
-ARG eisvogel_version="1.5.0"
+ARG eisvogel_version="2.4.0"
 RUN mkdir -p /root/.pandoc/templates \
     && wget https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/v${eisvogel_version}/eisvogel.tex \
     -O /root/.pandoc/templates/eisvogel.latex
