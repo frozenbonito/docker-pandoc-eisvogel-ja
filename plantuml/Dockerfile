@@ -8,7 +8,7 @@ RUN apk add --no-cache \
     ttf-droid \
     ttf-droid-nonlatin
 
-ARG plantuml_version="1.2020.16"
+ARG plantuml_version="1.2023.7"
 RUN wget https://sourceforge.net/projects/plantuml/files/plantuml.${plantuml_version}.jar/download -O /root/plantuml.jar
 
 RUN pip3 install --upgrade pip
